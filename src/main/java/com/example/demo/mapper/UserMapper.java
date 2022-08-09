@@ -7,5 +7,11 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
+    User findById(int ucode);
+
     List<User> findAll();
+
+    User login(User user);
+
+    void update(User user);
 }
