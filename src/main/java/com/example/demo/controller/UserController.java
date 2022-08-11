@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,14 +28,17 @@ public class UserController {
      * @return
      */
     @RequestMapping("/findAll")
-    public List<User> findAll(@RequestHeader("type") int type){
+    public R findAll(@RequestHeader(value = "type", required = false) Integer type){
+        if (type == null){
+            return R.error("请求头type= " + type, Collections.EMPTY_LIST);
+        }
         if (type == 1){
-            return userService.findAll();
+            return R.success(userService.findAll());
         }else {
             // 不是管理员不回传密码
             List<User> list = userService.findAll();
             list.forEach(user -> user.setUPwd(""));
-            return list;
+            return R.success(list);
         }
     }
 
